@@ -1,7 +1,7 @@
 import * as Redis from 'ioredis';
-import { RedisModuleOptions } from './redis.interface';
+import { RedisModuleAsynOptions, RedisModuleOptions } from './redis.interface';
 import { Provider } from '@nestjs/common';
-import { REDIS_CLIENT } from './redis.constants';
+import { REDIS_CLIENT, REDIS_MODULE_OPTIONS } from './redis.constants';
 import { v4 as uuidv4 } from 'uuid';
 
 export class RedisClientError extends Error { }
@@ -47,5 +47,12 @@ export const createClient = (): Provider => ({
             clients,
             size: clients.size
         }
-    }
+    },
+    inject: [REDIS_MODULE_OPTIONS]
+})
+
+export const createAsyncClientOptions = (options: RedisModuleAsynOptions) => ({
+    provide: REDIS_MODULE_OPTIONS,
+    useFactory: options.useFactory,
+    Inject: options.inject
 })
